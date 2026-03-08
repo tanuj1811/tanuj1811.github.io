@@ -256,7 +256,7 @@ body {
   border-color: var(--saffron);
   box-shadow: 0 8px 32px rgba(244,128,42,0.2);
 }
-.photo-box img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 14px; }
+.photo-box img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; border-radius: inherit; }
 .photo-icon { font-size: 28px; }
 .photo-hint { font-size: 10px; font-weight: 600; color: var(--text3); letter-spacing: 1.5px; text-transform: uppercase; text-align: center; line-height: 1.7; }
 #photo-input { display: none; }
@@ -511,12 +511,30 @@ body {
 }
 
 @media (max-width: 640px) {
-  .hero-body { grid-template-columns: 1fr; }
-  .photo-frame { display: none; }
-  .row { grid-template-columns: 130px 1fr; }
-  .grid2 { grid-template-columns: 1fr; }
+  .hero-body { 
+    display: flex; 
+    flex-direction: column-reverse; /* Places photo at the top */
+    align-items: center; 
+    text-align: center; 
+    padding: 32px 20px 24px;
+    gap: 16px; 
+  }
+  .lang-toggle { padding: 4px 8px; font-size: 11px; top: 12px; right: 12px; }
+  .blessing { justify-content: center; margin-bottom: 8px; }
+  .photo-frame { border-radius: 50%; display: flex; margin: 0 0 8px; }
+  .photo-box { width: 150px; height: 150px; border-radius: 50%; margin: 8px; box-shadow: 0 8px 24px rgba(244,128,42,0.25); border: 3px solid #fff; }
+  .photo-frame::before { border-radius: 50%; opacity: 0.25; inset: -4px; border: 2px dashed rgba(244,128,42,0.4); background: none; }
+  .hero-name { font-size: 40px; margin-bottom: 6px; }
+  .hero-name .first, .hero-name .last { display: inline-block; padding: 0 2px; }
+  .hero-tagline { margin: 8px 0; }
+
+  .row { grid-template-columns: 110px 1fr; }
+  .rlabel { padding: 12px 10px; font-size: 10px; }
+  .rval { padding: 12px 10px; font-size: 14px; }
+  
+  .grid2 { grid-template-columns: 1fr; gap: 1px; }
   .expect-mosaic { grid-template-columns: 1fr 1fr; }
-  .contact-grid { grid-template-columns: 1fr 1fr; }
+  .contact-grid { grid-template-columns: 1fr; }
 }
 </style>
 </head>
@@ -574,8 +592,8 @@ body {
         <div class="hero-tagline">Software Engineer ·</div>
       </div>
       <div class="photo-frame">
-        <div class="photo-box" id="photo-box">
-          <img src="photos/B67F2C38-383A-4040-ADAF-5239F0F095BB.JPG" alt="Photo">
+        <div class="photo-box" id="photo-box" onclick="cyclePhoto()">
+          <img id="profile-img" src="photos/_DSC8167.jpg" alt="Photo" style="cursor: pointer;" title="Click to view next photo">
         </div>
       </div>
     </div>
@@ -747,6 +765,14 @@ body {
         }
       });
     });
+  }
+
+  // Photo Cycler
+  const photos = ["_DSC8167.jpg", "DSC_0305.NEF"]; // Assuming NEF is handled by browser, but we can stick to supported image loops. If they are not natively rendered, they can just be swapped!
+  let currentPhotoIdx = 0;
+  function cyclePhoto() {
+    currentPhotoIdx = (currentPhotoIdx + 1) % photos.length;
+    document.getElementById('profile-img').src = "photos/" + photos[currentPhotoIdx];
   }
 
   // Scroll reveal
